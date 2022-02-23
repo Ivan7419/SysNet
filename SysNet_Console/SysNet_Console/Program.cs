@@ -13,8 +13,11 @@ namespace SysNet_Console
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-        [DllImport("user32.dll")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+        //[DllImport("user32.dll")]
+        //public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, StringBuilder lParam);
 
         static void Main(string[] args)
         {
@@ -48,15 +51,19 @@ namespace SysNet_Console
             IntPtr fw = FindWindow("Notepad", "FindWindow — Блокнот");
             if (fw != IntPtr.Zero)
             {
-                while (tr)
-                {
-                    
-                }
                 StringBuilder sb = new StringBuilder();
-                sb.Append("sa");
-
-                IntPtr res = SendMessage(fw, 0x000C, IntPtr.Zero, sb);
-                if (res != IntPtr.Zero) WriteLine("Окно закрыто");
+                while (true)
+                {
+                    sb.Clear();
+                    sb.Append("Time: ");
+                    sb.Append(DateTime.Now.Hour);
+                    sb.Append(":");
+                    sb.Append(DateTime.Now.Minute);
+                    sb.Append(":");
+                    sb.Append(DateTime.Now.Second);
+                    IntPtr res = SendMessage(fw, 0x000C, IntPtr.Zero, sb);
+                    System.Threading.Thread.Sleep(1000);
+                }
             }
 
             ReadKey();
